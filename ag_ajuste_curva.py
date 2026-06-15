@@ -176,6 +176,12 @@ def ejecutar_ag():
 
     plt.ion()
 
+    # Mostrar ventanas vacías para que el usuario las acomode
+    fig1.tight_layout()
+    fig2.tight_layout()
+    plt.pause(0.1)
+    input("\n  ── Acomoda las ventanas y presiona Enter para iniciar ──\n")
+
     # ── Bucle generacional ────────────────────────────────────────
     for gen in range(N_GENERACIONES):
 
