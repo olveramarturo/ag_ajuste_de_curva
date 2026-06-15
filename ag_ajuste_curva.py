@@ -23,7 +23,6 @@ Operadores implementados:
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
 # ═══════════════════════════════════════════════════════════════════
 #  CONFIGURACIÓN
@@ -167,11 +166,14 @@ def ejecutar_ag():
 
     historial = []          # aptitud del mejor individuo por generación
 
-    # ── Figura ────────────────────────────────────────────────────
-    fig = plt.figure(figsize=(13, 5))
-    gs  = gridspec.GridSpec(1, 2, figure=fig)
-    ax1 = fig.add_subplot(gs[0])    # panel izquierdo:  ajuste de curva
-    ax2 = fig.add_subplot(gs[1])    # panel derecho:    función de aptitud
+    # ── Ventana 1: ajuste de curva ────────────────────────────────
+    fig1, ax1 = plt.subplots(figsize=(7, 5))
+    fig1.canvas.manager.set_window_title('Ventana 1 — Ajuste de curva')
+
+    # ── Ventana 2: función de aptitud ─────────────────────────────
+    fig2, ax2 = plt.subplots(figsize=(7, 5))
+    fig2.canvas.manager.set_window_title('Ventana 2 — Función de aptitud')
+
     plt.ion()
 
     # ── Bucle generacional ────────────────────────────────────────
@@ -207,28 +209,48 @@ def ejecutar_ag():
 
         # e) Visualización en tiempo real
         if gen % 5 == 0 or gen == N_GENERACIONES - 1:
+            error_actual = historial[-1]
+
+            # — Ventana 1: curva generada vs curva objetivo —
             ax1.clear()
             ax1.plot(X_EVAL, Y_OBJETIVO, 'r-',  lw=2.0, label='Curva objetivo')
             ax1.plot(X_EVAL, mejor_curva, 'b--', lw=1.5,
-                     label=f'Gen {gen+1}  (error = {historial[-1]:.2f})')
-            ax1.set_title('Evolución del ajuste de curva')
+                     label=f'Mejor individuo — Gen {gen + 1}')
+            ax1.set_title('Ajuste de curva — individuo más apto por generación')
             ax1.set_xlabel('x')
             ax1.set_ylabel('f(x)')
             ax1.legend(loc='upper right', fontsize=9)
             ax1.grid(True, alpha=0.3)
+            fig1.tight_layout()
+            fig1.canvas.draw()
 
+            # — Ventana 2: función de aptitud + etiqueta del error —
             ax2.clear()
-            ax2.semilogy(historial, 'g-', lw=1.5)
-            ax2.set_title('Función de aptitud — mejor individuo')
+            ax2.plot(range(1, len(historial) + 1), historial, 'g-', lw=1.5)
+            ax2.set_title('Función de aptitud — individuo más apto')
             ax2.set_xlabel('Generación')
-            ax2.set_ylabel('Error absoluto acumulado (escala log)')
+            ax2.set_ylabel('|Error absoluto| acumulado')
             ax2.grid(True, alpha=0.3)
 
-            plt.tight_layout()
+            # Etiqueta de error publicada sobre la gráfica
+            ax2.text(
+                0.98, 0.95,
+                f'Generación: {gen + 1}\nError: {error_actual:.4f}',
+                transform=ax2.transAxes,
+                fontsize=11, fontweight='bold',
+                verticalalignment='top', horizontalalignment='right',
+                bbox=dict(boxstyle='round,pad=0.4', facecolor='lightyellow',
+                          edgecolor='gray', alpha=0.9),
+            )
+
+            fig2.tight_layout()
+            fig2.canvas.draw()
+
             plt.pause(0.001)
 
     plt.ioff()
-    plt.savefig('resultado_ag_ajuste_curva.png', dpi=150, bbox_inches='tight')
+    fig1.savefig('resultado_ventana1_curva.png',   dpi=150, bbox_inches='tight')
+    fig2.savefig('resultado_ventana2_aptitud.png', dpi=150, bbox_inches='tight')
     plt.show()
 
     # ── Reporte final ─────────────────────────────────────────────
@@ -250,7 +272,9 @@ def ejecutar_ag():
     reduccion = (1 - historial[-1] / historial[0]) * 100
     print(f"  Reducción del error:          {reduccion:>9.1f} %")
     print("═" * 54)
-    print(f"\n  Gráfica guardada en: resultado_ag_ajuste_curva.png")
+    print(f"\n  Gráficas guardadas en:")
+    print(f"    resultado_ventana1_curva.png")
+    print(f"    resultado_ventana2_aptitud.png")
 
 
 # ═══════════════════════════════════════════════════════════════════
