@@ -99,11 +99,10 @@ SEMILLA        = 42      # None para resultados variables
 
 ```
 .
-├── ag_ajuste_curva.py      # Algoritmo genético principal
 ├── propuesta_ejemplo.md    # Descripción técnica del ejemplo (Markdown)
 ├── propuesta_ejemplo.docx  # Descripción técnica del ejemplo (Word)
 ├── referencias.md          # Referencias académicas verificables
-└── README.md
+└── ag_ajuste_de_curva/     # Repositorio
 ```
 
 ---
