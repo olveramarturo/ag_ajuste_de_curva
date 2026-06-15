@@ -19,10 +19,6 @@ Operadores implementados:
   • Mutación: compuerta NOT sobre bits aleatorios (tasa 3 %)
   • Elitismo: mezcla padres + hijos, conserva los 100 mejores
 
-Dependencias: numpy, matplotlib
-Uso:
-    pip install numpy matplotlib
-    python ag_ajuste_curva.py
 """
 
 import numpy as np
